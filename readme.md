@@ -41,7 +41,7 @@ ldapsearch -H ldap://domain.com -D "cn=administrator,cn=users,dc=domain,dc=com" 
 ```
 
 ## 用法
-- 根据实际情况修改python脚本，更新ad服务器和连接用户信息
+- 根据实际情况修改python脚本，更新ad服务器和连接用户信息,search_bases尽量精确，避免查询到ad中的计算机信息，导致员工信息不准确
 
 - 打包镜像
 ```
