@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>AD User Information</title>
+</head>
+
+<body>
+    <h1>AD User Information</h1>
+    <table border="1">
+        <tr>
+            <th>Attribute</th>
+            <th>Value</th>
+        </tr>
+        <tr>
+            <td>Employee ID（员工编号）</td>
+            <td>{{ user_info.employeeID }}</td>
+        </tr>
+        <tr>
+            <td>sAMAccountName（账户名）</td>
+            <td>{{ user_info.sAMAccountName }}</td>
+        </tr>
+        <tr>
+            <td>Mail（邮箱）</td>
+            <td>{{ user_info.mail }}</td>
+        </tr>
+        <tr>
+            <td>CN Name（CN姓名）</td>
+            <td>{{ user_info.cn }}</td>
+        </tr>
+        <tr>
+            <td>Display Name（显示名称）</td>
+            <td>{{ user_info.displayName }}</td>
+        </tr>
+        <tr>
+            <td>Member Of（所属安全组）</td>
+            <td>
+                <ul>
+                    {% for group in user_info.memberOf %}
+                    <li>{{ group }}</li>
+                    {% endfor %}
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <td>Department（所属部门）</td>
+            <td>{{ user_info.department }}</td>
+        </tr>
+        <tr>
+            <td>Company（所属公司）</td>
+            <td>{{ user_info.company }}</td>
+        </tr>
+        <tr>
+            <td>Title（职位）</td>
+            <td>{{ user_info.title }}</td>
+        </tr>
+        <tr>
+            <td>Logon Count（登录次数）</td>
+            <td>{{ user_info.logonCount }}</td>
+        </tr>
+        <tr>
+            <td>Manager（上级领导）</td>
+            <td>{{ user_info.manager }}</td>
+        </tr>
+        <tr>
+            <td>Mobile（手机号）</td>
+            <td>{{ user_info.mobile }}</td>
+        </tr>
+        <tr>
+            <td>UserAccountControl（启用状态）</td>
+            <td>
+                {% if user_info['启用状态'] == '启用' %}
+                <span style="color: green;">{{ user_info['启用状态'] }}</span>
+                {% else %}
+                <span style="color: red;">{{ user_info['启用状态'] }}</span>
+                {% endif %}
+            </td>
+        </tr>
+    </table>
+    <!-- 添加返回按钮 -->
+    <a href="{{ url_for('search') }}"><button>返回查询界面</button></a>
+    <!-- 仅当用户启用时显示修改密码表单 -->
+    {% if user_info['启用状态'] == '启用' %}
+    <h2>Update Password</h2>
+    <form method="post" action="{{ url_for('update_password') }}" id="passwordForm">
+        <input type="hidden" name="employeeID" value="{{ user_info.employeeID }}">
+        <label for="new_password">New Password:</label><br>
+        <input type="password" id="new_password" name="new_password" required><br><br>
+        <label for="confirm_password">Confirm Password:</label><br>
+        <input type="password" id="confirm_password" name="confirm_password" required><br><br>
+        <input type="submit" value="Update Password">
+    </form>
+    {% endif %}
+    <script>
+        document.getElementById('passwordForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const newPassword = document.getElementById('new_password').value;
+            const confirmPassword = document.getElementById('confirm_password').value;
+            if (newPassword!== confirmPassword) {
+                alert('Passwords do not match. Please try again.');
+                // 清除输入框内容
+                document.getElementById('new_password').value = '';
+                document.getElementById('confirm_password').value = '';
+                return;
+            }
+            const formData = new FormData(this);
+            fetch('/update_password', {
+                method: 'POST',
+                body: formData
+            })
+          .then(response => response.json())
+          .then(data => {
+                alert(data.message);
+                // 清除输入框内容
+                document.getElementById('new_password').value = '';
+                document.getElementById('confirm_password').value = '';
+                if (data.success) {
+                    // 可以在这里添加成功后的操作，比如跳转到其他页面
+                }
+            })
+          .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while updating password.');
+                // 清除输入框内容
+                document.getElementById('new_password').value = '';
+                document.getElementById('confirm_password').value = '';
+            });
+        });
+    </script>
+</body>
+
+</html>

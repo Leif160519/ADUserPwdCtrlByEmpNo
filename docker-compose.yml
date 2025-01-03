@@ -1,0 +1,12 @@
+version: "3"
+services:
+  ad-operations:
+    image: ad-operations:latest
+    container_name: ad-operations
+    hostname: ad-operations
+    restart: always
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - ./logs:/app/logs
+    ports:
+      - 5000:5000
