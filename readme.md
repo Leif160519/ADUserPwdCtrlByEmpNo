@@ -54,20 +54,26 @@ ldapsearch -H ldap://domain.com -D "cn=administrator,cn=users,dc=domain,dc=com" 
 ```
 
 ## 用法
-- 根据实际情况修改python脚本，更新ad服务器和连接用户信息,search_bases尽量精确，避免查询到ad中的计算机信息，导致员工信息不准确
+- 1.根据实际情况修改python脚本，更新ad服务器和连接用户信息,search_bases尽量精确，避免查询到ad中的计算机信息，导致员工信息不准确
 
-- 打包镜像
+- 2.打包镜像
 ```
 docker build -t ad-operations:latest .
 ```
 
-- 运行
+- 3.docker部署
 ```
 docker-compose up -d
 ```
 
-- 访问
-打开浏览器，输入`http://<server_ip>:5000`
+- 4.kubernetes部署
+```
+kubectl apply -f kubernetes.yaml
+```
+
+- 5.访问
+  - docker部署：打开浏览器，输入`http://<server_ip>:5000`
+  - kubernetes部署：打开浏览器，输入`https://ad-operations.domain.com`
 
 ## 说明
 - 修改密码功能需要连接ad的用户有修改密码的权限
