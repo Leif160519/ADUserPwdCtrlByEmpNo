@@ -8,11 +8,11 @@
 
 ![image](images/search.png)
 
-- 账户启用的状态
+- 账户启用的状态:显示修改密码控件，支持修改ad密码
 
 ![image](images/result-enable.png)
 
-- 账户禁用的状态
+- 账户禁用的状态:不显示修改密码控件，不支持修改ad密码
 
 ![image](images/result-disable.png)
 
