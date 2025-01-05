@@ -257,7 +257,7 @@ def search():
         if user_info:
             return render_template('result.html', user_info=user_info)
         else:
-            return "User not found or disabled"
+            return "User not found"
     return render_template('search.html')
 
 @app.route('/update_password', methods=['POST'])
