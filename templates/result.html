@@ -88,6 +88,8 @@
         <input type="password" id="new_password" name="new_password" required><br><br>
         <label for="confirm_password">Confirm Password:</label><br>
         <input type="password" id="confirm_password" name="confirm_password" required><br><br>
+        <label for="force_password_change">用户下次登录时需修改密码(密码永不过期时无效):</label>
+        <input type="checkbox" id="force_password_change" name="force_password_change"><br><br>
         <input type="submit" value="Update Password">
     </form>
     {% endif %}

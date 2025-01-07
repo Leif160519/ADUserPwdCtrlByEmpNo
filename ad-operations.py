@@ -165,7 +165,7 @@ def get_ad_user_info(employeeID):
     logging.info(f"未找到员工编号为 {employeeID} 的用户信息")
     return None
 
-def update_ad_password(employeeID, new_password):
+def update_ad_password(employeeID, new_password, force_password_change):
 #    server = Server('your-ad-ip-address', get_info=ALL)
     # 修改密码需要ssl
     server = Server('your-ad-ip-address', port = 636, get_info = ALL, use_ssl = True, validator=False)
@@ -192,6 +192,9 @@ def update_ad_password(employeeID, new_password):
                 # 这个方法适用于Microsoft active directory
                 result = conn.extend.microsoft.modify_password(user_dn,new_password)
                 if result:
+                    if force_password_change:
+                        # 设置用户下次登录时需修改密码
+                        conn.modify(user_dn, {'pwdLastSet': [(MODIFY_REPLACE, [0])]})
                     logging.info(f"Password updated successfully for employeeID: {employeeID}")
                     print(f"密码修改成功:{conn.result}")
                     return True
@@ -264,6 +267,7 @@ def search():
 def update_password():
     employeeID = request.form.get('employeeID')
     new_password = request.form.get('new_password')
+    force_password_change = request.form.get('force_password_change') is not None
     if not employeeID or not new_password:
         print("未能正确获取工号或密码")
         return jsonify({"success": False, "message": "Failed to get employeeID or password"})
@@ -275,7 +279,7 @@ def update_password():
     if not is_valid:
         print(f"工号 {employeeID}，密码 {new_password} 验证失败: {error_msg}")
         return jsonify({"success": False, "message": "Password does not meet requirements: " + error_msg})
-    if update_ad_password(employeeID, new_password):
+    if update_ad_password(employeeID, new_password,force_password_change):
         print(f"工号 {employeeID}，密码 {new_password} 更新成功")
         return jsonify({"success": True, "message": "Password updated successfully"})
     else:
